@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "752063195019",
+    "firebase_url": "https://badel-collections.firebaseio.com",
+    "project_id": "badel-collections",
+    "storage_bucket": "badel-collections.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752063195019:android:1736974729e8882b",
+        "android_client_info": {
+          "package_name": "com.modele.badelcollection"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsvjd6q-AYOB6NDm0y_ygtZFcKgC85Uas"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752063195019-6m0bvbtaifffpe56k2c8iopkdii5eerc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

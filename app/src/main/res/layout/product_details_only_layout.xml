@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/fontBlanc"
+    android:elevation="3dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:id="@+id/product_details_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/product_details_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#d4d4d4"
+        android:padding="16dp"
+        android:text="Product Details"
+        android:textColor="#9c9c9c"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/product_details_body"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="The telephone box that inspired Red Frame White Light is located at the junction of
+        Birkenhead Road and Greenwood Road in Meols.
+
+    In the nearby pub The Railway Inn the band would meet and used the telephone box to organise their gigs and
+    transportation. In the songs lyrics the phone number is mentioned: 6323003.[6]
+
+    Fans would ring the number expecting to get one of the band members, but got a confused
+    home owner in their own area code. Over the years it has become a kind of sacred place for OMD fans.
+    e phone box was removed by BT Group. It has subsequently been restored and returned to its original
+    location as of October 2017."
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/product_details_title" />
+</android.support.constraint.ConstraintLayout>

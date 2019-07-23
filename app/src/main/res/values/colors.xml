@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <color name="colorPrimary">#CE0000</color>
+    <color name="colorPrimaryDark">#CE0000</color>
+    <color name="colorAccent">#ffffff</color>
+    <color name="colorRouge">#DD0C0C</color>
+    <color name="transparent">#00FDFDFD</color>
+
+
+    <color name="hint_couleur">#70ffffff</color>
+    <color name="gris_Color">#70D6D6D6</color>
+    <color name="greenSuccessful">#00574B</color>
+    <color name="fond">#99FFE699</color>
+    <color name="fond_autre">#CCFFF2CC</color>
+    <color name="blackColor">#CC000000</color>
+
+
+    <color name="fontBlanc">#FCFFFFFF</color>
+</resources>
