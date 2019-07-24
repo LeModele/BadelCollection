@@ -33,7 +33,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.modele.badelcollection.DBqueries.currentUser;
 import static com.modele.badelcollection.MainActivity.showCart;
+import static com.modele.badelcollection.RegisterActivity.setSignUpFragment;
 
 public class ProductDetailsActivity extends AppCompatActivity {
     private ViewPager productImagesViewpager;
@@ -86,6 +88,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private static RecyclerView coupensRecyclerview;
     private static LinearLayout selectedCoupen;
     ///// coupen Dialog
+
+    private Dialog signInDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,8 +261,12 @@ public class ProductDetailsActivity extends AppCompatActivity {
         buyNowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent deliveryIntent = new Intent(ProductDetailsActivity.this,DeliveryActivity.class);
-                startActivity(deliveryIntent);
+                if(currentUser == null){
+                    signInDialog.show();
+                }else {
+                    Intent deliveryIntent = new Intent(ProductDetailsActivity.this,DeliveryActivity.class);
+                    startActivity(deliveryIntent);
+                }
             }
         });
 
@@ -313,6 +321,37 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 checkCoupenPriceDialog.show();
             }
         });
+
+        //// sign dialog
+        signInDialog = new Dialog(ProductDetailsActivity.this);
+        signInDialog.setContentView(R.layout.sign_in_dialog);
+        signInDialog.setCancelable(true);
+        signInDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        Button dialogSignInBtn = signInDialog.findViewById(R.id.sign_in_btn);
+        Button dialogSignUpBtn = signInDialog.findViewById(R.id.sign_up_btn);
+        final Intent registerIntent = new Intent(ProductDetailsActivity.this,RegisterActivity.class);
+
+        dialogSignInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signInDialog.dismiss();
+                setSignUpFragment =false;
+                startActivity(registerIntent);
+
+            }
+        });
+
+        dialogSignUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signInDialog.dismiss();
+                setSignUpFragment =true;
+                startActivity(registerIntent);
+
+            }
+        });
+        /// sign Dialog
 
 
 

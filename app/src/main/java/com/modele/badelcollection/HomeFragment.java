@@ -179,40 +179,53 @@ public class HomeFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                networkInfo = connectivityManager.getActiveNetworkInfo();
                 swipeRefreshLayout.setRefreshing(true);
-                categoryModelList.clear();
-                lists.clear();
-                loadedCategoriesNames.clear();
-                if(networkInfo !=null && networkInfo.isConnected() == true) {
-                    noInternetConnection.setVisibility(View.GONE);
-                    retryBtn.setVisibility(View.GONE);
-                    categoryRecyclerView.setVisibility(View.VISIBLE);
-                    homePageRecyclerView.setVisibility(View.GONE);
+                reloadPage();
 
-                    category_adapter = new Category_Adapter(categoryModelFakeList);
-                    adapter = new HomePageAdapter(homePageModelFakeList);
-                    categoryRecyclerView.setAdapter(category_adapter);
-                    homePageRecyclerView.setAdapter(adapter);
-
-                    loadCategories(categoryRecyclerView,getContext());
-
-                    loadedCategoriesNames.add("HOME");
-                    lists.add(new ArrayList<HomePageModel>());
-                    adapter = new HomePageAdapter(lists.get(0));
-                    loadFragmentData(homePageRecyclerView,getContext(),0,"Home");
-
-            }else {
-                    categoryRecyclerView.setVisibility(View.GONE);
-                    homePageRecyclerView.setVisibility(View.GONE);
-                    Glide.with(getContext()).load(R.drawable.no_internet_connexion).into(noInternetConnection);
-                    noInternetConnection.setVisibility(View.VISIBLE);
-                    swipeRefreshLayout.setRefreshing(false);
-                }
             }
         });
         /// refresh layout
+        retryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reloadPage();
+            }
+        });
         return view;
+    }
+
+    private void reloadPage(){
+        networkInfo = connectivityManager.getActiveNetworkInfo();
+        categoryModelList.clear();
+        lists.clear();
+        loadedCategoriesNames.clear();
+        if(networkInfo !=null && networkInfo.isConnected() == true) {
+            noInternetConnection.setVisibility(View.GONE);
+            retryBtn.setVisibility(View.GONE);
+            categoryRecyclerView.setVisibility(View.VISIBLE);
+            homePageRecyclerView.setVisibility(View.GONE);
+
+            category_adapter = new Category_Adapter(categoryModelFakeList);
+            adapter = new HomePageAdapter(homePageModelFakeList);
+            categoryRecyclerView.setAdapter(category_adapter);
+            homePageRecyclerView.setAdapter(adapter);
+
+            loadCategories(categoryRecyclerView,getContext());
+
+            loadedCategoriesNames.add("HOME");
+            lists.add(new ArrayList<HomePageModel>());
+            adapter = new HomePageAdapter(lists.get(0));
+            loadFragmentData(homePageRecyclerView,getContext(),0,"Home");
+
+        }else {
+            categoryRecyclerView.setVisibility(View.GONE);
+            homePageRecyclerView.setVisibility(View.GONE);
+            Glide.with(getContext()).load(R.drawable.no_internet_connexion).into(noInternetConnection);
+            noInternetConnection.setVisibility(View.VISIBLE);
+            retryBtn.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
     }
 
 }
