@@ -56,7 +56,7 @@ public class SignInFragment extends Fragment {
 
     private ProgressBar progressBar;
 
-
+    public static boolean disableCloseBtn = false;
 
 
     @Override
@@ -78,6 +78,11 @@ public class SignInFragment extends Fragment {
         firebaseAuth=FirebaseAuth.getInstance();
 
         progressBar = view.findViewById(R.id.sign_in_progressbar);
+        if(disableCloseBtn){
+            closeBtn.setVisibility(View.GONE);
+        }else {
+            closeBtn.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 
@@ -167,14 +172,14 @@ public class SignInFragment extends Fragment {
         {
             if (TextUtils.isEmpty(password.getText()))
             {
-            signInBtn.setEnabled(true);
+            //signInBtn.setEnabled(false);
             signInBtn.setTextColor(Color.rgb(255,255,255));
             }else{
-                signInBtn.setEnabled(false);
+                //signInBtn.setEnabled(true);
                 signInBtn.setTextColor(Color.argb(50,255,255,255));
             }
             }else {
-            signInBtn.setEnabled(false);
+            //signInBtn.setEnabled(false);
             signInBtn.setTextColor(Color.argb(50,255,255,255));
         }
 
@@ -187,7 +192,7 @@ public class SignInFragment extends Fragment {
             if(password.length()>=8)
             {
                 progressBar.setVisibility(View.VISIBLE);
-                signInBtn.setEnabled(false);
+                //signInBtn.setEnabled(true);
                 signInBtn.setTextColor(Color.argb(50,255,255,255));
 
                 firebaseAuth.signInWithEmailAndPassword(email.getText().toString(),password.getText().toString())
@@ -215,8 +220,12 @@ public class SignInFragment extends Fragment {
     }
 
     private void mainIntent(){
-        Intent mainIntent=new Intent(getActivity(),MainActivity.class);
-        startActivity(mainIntent);
+        if(disableCloseBtn){
+            disableCloseBtn = false;
+        }else {
+            Intent mainIntent = new Intent(getActivity(), MainActivity.class);
+            startActivity(mainIntent);
+        }
         getActivity().finish();
 
     }

@@ -1,6 +1,7 @@
 package com.modele.badelcollection;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,13 +29,16 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static com.modele.badelcollection.DBqueries.currentUser;
 import static com.modele.badelcollection.MainActivity.showCart;
 import static com.modele.badelcollection.RegisterActivity.setSignUpFragment;
 
@@ -48,6 +53,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private TextView tvCodIndicator;
     private TabLayout viewpagerIndicator;
     private Button coupenRedeenBtn;
+    private LinearLayout coupenRedemptionLayout;
 
     private TextView rewardTitle;
     private TextView rewardBody;
@@ -78,6 +84,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     /////  rating layout
 
     private Button buyNowBtn;
+    private LinearLayout addToCartBtn;
 
     private FirebaseFirestore firebaseFirestore;
 
@@ -90,6 +97,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
     ///// coupen Dialog
 
     private Dialog signInDialog;
+    private Dialog loadingDialog;
+    private FirebaseUser currentUser;
+    private String productID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,12 +136,26 @@ public class ProductDetailsActivity extends AppCompatActivity {
         totalRatingsFigure= findViewById(R.id.total_ratings_figure);
         ratingsProgressBarContainer= findViewById(R.id.ratings_progressbar_container);
         averageRating= findViewById(R.id.average_rating);
+        addToCartBtn= findViewById(R.id.add_to_cart_btn);
+        coupenRedemptionLayout = findViewById(R.id.coupen_redemption_layout);
+
+        ///// loading Dialog
+        loadingDialog = new Dialog(ProductDetailsActivity.this);
+        loadingDialog.setContentView(R.layout.loading_progress_dialog);
+        loadingDialog.setCancelable(false);
+        loadingDialog.getWindow().setBackgroundDrawableResource(R.drawable.slider_background);
+        //loadingDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.slider_background)); // valab aparti de api 21
+        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        loadingDialog.show();
+
+        ///// loading Dialog
 
 
         firebaseFirestore =FirebaseFirestore.getInstance();
 
         final List<String> productImages = new ArrayList<>();
-        firebaseFirestore.collection("PRODUCTS").document("Mz8Hg9VntLYNfW9k6cBP")
+        productID = getIntent().getStringExtra("PRODUCT_ID");
+        firebaseFirestore.collection("PRODUCTS").document(productID)//"Mz8Hg9VntLYNfW9k6cBP")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -193,7 +217,19 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     averageRating.setText(documentSnapshot.get("average_rating").toString());
                     productDetailsViewpager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(),productDetailsTablayout.getTabCount(),productDescription,productOrtherDetails,productSpecificationModelList));
 
+                    if(DBqueries.wishList.size() == 0){
+                        DBqueries.loadWishList(ProductDetailsActivity.this,loadingDialog);
+                    } else {
+                        loadingDialog.dismiss();
+                    }
+                    if(DBqueries.wishList.contains(productID)){
+                        ALREADY_ADDED_TO_WISHLIST = true;
+                        addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimaryDark));
+                    }else {
+                        ALREADY_ADDED_TO_WISHLIST = false;
+                    }
                 }else {
+                    loadingDialog.dismiss();
                     String error = task.getException().getMessage();
                     Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
                 }
@@ -213,16 +249,62 @@ public class ProductDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(ALREADY_ADDED_TO_WISHLIST){
-                    ALREADY_ADDED_TO_WISHLIST=false;
-                    addToWishlistBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9E9E9E")));
+                if(currentUser == null){
+                    signInDialog.show();
                 }else {
-                    ALREADY_ADDED_TO_WISHLIST=true;
-                    addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimaryDark));
+                    if (ALREADY_ADDED_TO_WISHLIST) {
+                        ALREADY_ADDED_TO_WISHLIST = false;
+                        addToWishlistBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9E9E9E")));
+                    } else {
+
+                        Map<String,Object> addProduct = new HashMap<>();
+                        addProduct.put("product_ID_"+String.valueOf(DBqueries.wishList.size()),productID);
+
+                        firebaseFirestore.collection("USERS")
+                                .document(currentUser.getUid())
+                                .collection("USER_DATA")
+                                .document("MY_WISHLIST")
+                                .set(addProduct).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+
+                                    Map<String,Object> updateListSize = new HashMap<>();
+                                    updateListSize.put("list_size", (long) (DBqueries.wishList.size()+1));
+
+                                    firebaseFirestore.collection("USERS")
+                                            .document(currentUser.getUid())
+                                            .collection("USER_DATA")
+                                            .document("MY_WISHLIST")
+                                            .update(updateListSize).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                ALREADY_ADDED_TO_WISHLIST = true;
+                                                addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimaryDark));
+                                                DBqueries.wishList.add(productID);
+                                                String addToWishlist = getString(R.string.add_to_wishlist);
+                                                Toast.makeText(ProductDetailsActivity.this, addToWishlist, Toast.LENGTH_SHORT).show();
+
+                                            }else {
+                                                String error = task.getException().getMessage();
+                                                Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                }else {
+                                    String error = task.getException().getMessage();
+                                    Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                    }
                 }
 
             }
         });
+
 
     productDetailsViewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(productDetailsTablayout));
 
@@ -247,12 +329,17 @@ public class ProductDetailsActivity extends AppCompatActivity {
         //// rating layout
 
         rateNowContainer = findViewById(R.id.rate_now_container);
-        for(int x =0;x<rateNowContainer.getChildCount();x++){
+        for(int x = 0; x < rateNowContainer.getChildCount();x++){
             final int startPosition = x;
             rateNowContainer.getChildAt(x).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    setRating(startPosition);
+                    if(currentUser == null){
+                        signInDialog.show();
+                    }else {
+                        setRating(startPosition);
+                    }
+
                 }
             });
         }
@@ -266,6 +353,17 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 }else {
                     Intent deliveryIntent = new Intent(ProductDetailsActivity.this,DeliveryActivity.class);
                     startActivity(deliveryIntent);
+                }
+            }
+        });
+
+        addToCartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(currentUser == null){
+                    signInDialog.show();
+                }else {
+                    ////todo: add to cart
                 }
             }
         });
@@ -335,6 +433,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
         dialogSignInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SignInFragment.disableCloseBtn = true;
+                SignUpFragment.disableCloseBtn = true;
                 signInDialog.dismiss();
                 setSignUpFragment =false;
                 startActivity(registerIntent);
@@ -345,6 +445,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
         dialogSignUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SignInFragment.disableCloseBtn = true;
+                SignUpFragment.disableCloseBtn = true;
                 signInDialog.dismiss();
                 setSignUpFragment =true;
                 startActivity(registerIntent);
@@ -353,8 +455,18 @@ public class ProductDetailsActivity extends AppCompatActivity {
         });
         /// sign Dialog
 
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUser == null){
+            coupenRedemptionLayout.setVisibility(View.GONE);
 
+        }else {
+            coupenRedemptionLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     public static void showDialogRecyclerview(){
@@ -401,10 +513,14 @@ public class ProductDetailsActivity extends AppCompatActivity {
             // todo: search
             return true;
         } else if (id == R.id.main_cart_icon) {
-            Intent cartIntent = new Intent(ProductDetailsActivity.this,MainActivity.class);
-            showCart = true;
-            startActivity(cartIntent);
-            return true;
+            if(currentUser == null){
+                signInDialog.show();
+            }else {
+                Intent cartIntent = new Intent(ProductDetailsActivity.this, MainActivity.class);
+                showCart = true;
+                startActivity(cartIntent);
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }

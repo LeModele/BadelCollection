@@ -29,8 +29,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-import static com.modele.badelcollection.DBqueries.currentUser;
 import static com.modele.badelcollection.RegisterActivity.setSignUpFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -53,6 +54,9 @@ public class MainActivity extends AppCompatActivity
     private Window window;
     private Toolbar toolbar;
     private Dialog signInDialog;
+    private FirebaseUser currentUser;
+
+    public static DrawerLayout drawer;
 
 
     @Override
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity
         window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -85,11 +89,6 @@ public class MainActivity extends AppCompatActivity
             setFragment(new HomeFragment(), HOME_FRAGMENT);
         }
 
-         if (currentUser == null){
-             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(false);
-         }else {
-             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(true);
-         }
 
         signInDialog = new Dialog(MainActivity.this);
         signInDialog.setContentView(R.layout.sign_in_dialog);
@@ -103,22 +102,36 @@ public class MainActivity extends AppCompatActivity
         dialogSignInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SignInFragment.disableCloseBtn = true;
+                SignUpFragment.disableCloseBtn = true;
                 signInDialog.dismiss();
                 setSignUpFragment =false;
                 startActivity(registerIntent);
-
             }
         });
 
         dialogSignUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SignInFragment.disableCloseBtn = true;
+                SignUpFragment.disableCloseBtn = true;
                 signInDialog.dismiss();
                 setSignUpFragment =true;
                 startActivity(registerIntent);
-
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null){
+            navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(false);
+        }else {
+            navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(true);
+        }
+
     }
 
     @Override
@@ -225,6 +238,10 @@ public class MainActivity extends AppCompatActivity
             } else if (id == R.id.nav_my_account) {
                 gotoFragment("My Account", new MyAccountFragment(), ACCOUNT_FRAGMENT);
             } else if (id == R.id.nav_sign_out) {
+                FirebaseAuth.getInstance().signOut();
+                Intent registerIntent = new Intent(MainActivity.this,RegisterActivity.class);
+                startActivity(registerIntent);
+                finish();
 
             }
             drawer.closeDrawer(GravityCompat.START);

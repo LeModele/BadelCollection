@@ -32,6 +32,8 @@ public class RegisterActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if(keyCode==KeyEvent.KEYCODE_BACK){
+            SignUpFragment.disableCloseBtn = false;
+            SignInFragment.disableCloseBtn = false;
             if(onResetPasswordFragment){
                 onResetPasswordFragment=false;
                 setFragment(new SignInFragment());
@@ -43,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void setDefaultFragment(Fragment fragment)
     {
-        FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(frameLayout.getId(),fragment);
         fragmentTransaction.commit();
     }

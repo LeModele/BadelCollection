@@ -142,6 +142,7 @@ public class HomeFragment extends Fragment {
         networkInfo = connectivityManager.getActiveNetworkInfo();
 
         if(networkInfo !=null && networkInfo.isConnected() == true) {
+            MainActivity.drawer.setDrawerLockMode(0);
             noInternetConnection.setVisibility(View.GONE);
             retryBtn.setVisibility(View.GONE);
             categoryRecyclerView.setVisibility(View.VISIBLE);
@@ -168,6 +169,7 @@ public class HomeFragment extends Fragment {
             homePageRecyclerView.setAdapter(adapter);
 
         }else {
+            MainActivity.drawer.setDrawerLockMode(1);
             categoryRecyclerView.setVisibility(View.GONE);
             homePageRecyclerView.setVisibility(View.GONE);
             Glide.with(this).load(R.drawable.no_internet_connexion).into(noInternetConnection);
@@ -179,19 +181,65 @@ public class HomeFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
-                reloadPage();
 
+                refresh();//reloadPage();
             }
         });
         /// refresh layout
         retryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reloadPage();
+                swipeRefreshLayout.setRefreshing(true);
+               refresh(); //reloadPage();
             }
         });
         return view;
+    }
+
+    private void refresh(){
+        networkInfo = connectivityManager.getActiveNetworkInfo();
+        categoryModelList.clear();
+        lists.clear();
+        loadedCategoriesNames.clear();
+        if(networkInfo !=null && networkInfo.isConnected() == true) {
+            MainActivity.drawer.setDrawerLockMode(0);
+            noInternetConnection.setVisibility(View.GONE);
+            retryBtn.setVisibility(View.GONE);
+            categoryRecyclerView.setVisibility(View.VISIBLE);
+            homePageRecyclerView.setVisibility(View.VISIBLE);
+
+            if(categoryModelList.size() == 0)
+            {
+                loadCategories(categoryRecyclerView,getContext());
+            }else {
+                category_adapter = new Category_Adapter(categoryModelList);
+                category_adapter.notifyDataSetChanged();
+            }
+            categoryRecyclerView.setAdapter(category_adapter);
+
+            if(lists.size() == 0)
+            {
+                loadedCategoriesNames.add("HOME");
+                lists.add(new ArrayList<HomePageModel>());
+                loadFragmentData(homePageRecyclerView,getContext(),0,"Home");
+            }else {
+                adapter = new HomePageAdapter(lists.get(0));
+                adapter.notifyDataSetChanged();
+            }
+            homePageRecyclerView.setAdapter(adapter);
+
+        }else {
+            MainActivity.drawer.setDrawerLockMode(1);
+            String noConnexion = getString(R.string.NoConnexion);
+            Toast.makeText(getContext(),noConnexion,Toast.LENGTH_SHORT).show();
+            categoryRecyclerView.setVisibility(View.GONE);
+            homePageRecyclerView.setVisibility(View.GONE);
+            Glide.with(this).load(R.drawable.no_internet_connexion).into(noInternetConnection);
+            noInternetConnection.setVisibility(View.VISIBLE);
+            retryBtn.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
     }
 
     private void reloadPage(){
@@ -199,7 +247,8 @@ public class HomeFragment extends Fragment {
         categoryModelList.clear();
         lists.clear();
         loadedCategoriesNames.clear();
-        if(networkInfo !=null && networkInfo.isConnected() == true) {
+        if(networkInfo !=null && networkInfo.isConnected()== true) {
+            MainActivity.drawer.setDrawerLockMode(0);
             noInternetConnection.setVisibility(View.GONE);
             retryBtn.setVisibility(View.GONE);
             categoryRecyclerView.setVisibility(View.VISIBLE);
@@ -217,7 +266,11 @@ public class HomeFragment extends Fragment {
             adapter = new HomePageAdapter(lists.get(0));
             loadFragmentData(homePageRecyclerView,getContext(),0,"Home");
 
+
         }else {
+            MainActivity.drawer.setDrawerLockMode(1);
+            String noConnexion = getString(R.string.NoConnexion);
+            Toast.makeText(getContext(),noConnexion,Toast.LENGTH_SHORT).show();
             categoryRecyclerView.setVisibility(View.GONE);
             homePageRecyclerView.setVisibility(View.GONE);
             Glide.with(getContext()).load(R.drawable.no_internet_connexion).into(noInternetConnection);

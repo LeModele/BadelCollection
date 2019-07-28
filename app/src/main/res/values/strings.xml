@@ -17,6 +17,11 @@
     <string name="check_coupen_dialog">Your coupen</string>
 
     <string name="Retry_connect">Retry</string>
+    <string name="add_to_wishlist">Ajouter dans votre wishlist avec succes</string>
+
+
+    <string name="NoConnexion">No internet Connection!</string>
+
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
