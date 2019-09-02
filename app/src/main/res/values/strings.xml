@@ -16,11 +16,18 @@
     <string name="action_settings">Settings</string>
     <string name="check_coupen_dialog">Your coupen</string>
 
-    <string name="Retry_connect">Retry</string>
+
     <string name="add_to_wishlist">Ajouter dans votre wishlist avec succes</string>
+    <string name="remove_wishlist">supprimer dans votre wishlist avec succes</string>
+    <string name="remove_on_cart">supprimer dans votre cart avec succes</string>
+    <string name="ready_in_cart">Il est deja dans votre panier</string>
+    <string name="addToCart">Ajouer dans votre panier avec succes</string>
 
 
+    <string name="Retry_connect">Reesayer</string>
     <string name="NoConnexion">No internet Connection!</string>
+    <string name="msg_connction">Verifier votre Connection internet et reesayer!</string>
+    <string name="rating_msg">Merci pour vos rating</string>
 
 
     <string name="menu_home">Home</string>
@@ -29,4 +36,11 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+
+    <string-array name="india_states">
+        <item>Fort liberte</item>
+        <item>port au prince</item>
+        <item>Cap Haitien</item>
+    </string-array>
+
 </resources>

@@ -66,6 +66,7 @@ public class HomeFragment extends Fragment {
     private HomePageAdapter adapter;
     private ImageView noInternetConnection;
     private Button retryBtn;
+    private TextView txtNoConnexion;
 
     //private FirebaseFirestore firebaseFirestore;
 
@@ -80,6 +81,7 @@ public class HomeFragment extends Fragment {
         categoryRecyclerView=view.findViewById(R.id.category_recyclerview);
         homePageRecyclerView =view.findViewById(R.id.home_page_recyvlerview);
         retryBtn= view.findViewById(R.id.retry_btn);
+        txtNoConnexion= view.findViewById(R.id.txt_no_connexion);
 
         swipeRefreshLayout.setColorSchemeColors(
                 getContext().getResources().getColor(R.color.colorPrimary),
@@ -145,6 +147,7 @@ public class HomeFragment extends Fragment {
             MainActivity.drawer.setDrawerLockMode(0);
             noInternetConnection.setVisibility(View.GONE);
             retryBtn.setVisibility(View.GONE);
+            txtNoConnexion.setVisibility(View.GONE);
             categoryRecyclerView.setVisibility(View.VISIBLE);
             homePageRecyclerView.setVisibility(View.VISIBLE);
 
@@ -175,6 +178,7 @@ public class HomeFragment extends Fragment {
             Glide.with(this).load(R.drawable.no_internet_connexion).into(noInternetConnection);
             noInternetConnection.setVisibility(View.VISIBLE);
             retryBtn.setVisibility(View.VISIBLE);
+            txtNoConnexion.setVisibility(View.VISIBLE);
         }
 
         /// refresh layout
@@ -205,6 +209,7 @@ public class HomeFragment extends Fragment {
             MainActivity.drawer.setDrawerLockMode(0);
             noInternetConnection.setVisibility(View.GONE);
             retryBtn.setVisibility(View.GONE);
+            txtNoConnexion.setVisibility(View.GONE);
             categoryRecyclerView.setVisibility(View.VISIBLE);
             homePageRecyclerView.setVisibility(View.VISIBLE);
 
@@ -237,6 +242,7 @@ public class HomeFragment extends Fragment {
             Glide.with(this).load(R.drawable.no_internet_connexion).into(noInternetConnection);
             noInternetConnection.setVisibility(View.VISIBLE);
             retryBtn.setVisibility(View.VISIBLE);
+            txtNoConnexion.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setRefreshing(false);
         }
 
@@ -251,6 +257,7 @@ public class HomeFragment extends Fragment {
             MainActivity.drawer.setDrawerLockMode(0);
             noInternetConnection.setVisibility(View.GONE);
             retryBtn.setVisibility(View.GONE);
+            txtNoConnexion.setVisibility(View.GONE);
             categoryRecyclerView.setVisibility(View.VISIBLE);
             homePageRecyclerView.setVisibility(View.GONE);
 
@@ -266,7 +273,6 @@ public class HomeFragment extends Fragment {
             adapter = new HomePageAdapter(lists.get(0));
             loadFragmentData(homePageRecyclerView,getContext(),0,"Home");
 
-
         }else {
             MainActivity.drawer.setDrawerLockMode(1);
             String noConnexion = getString(R.string.NoConnexion);
@@ -276,6 +282,7 @@ public class HomeFragment extends Fragment {
             Glide.with(getContext()).load(R.drawable.no_internet_connexion).into(noInternetConnection);
             noInternetConnection.setVisibility(View.VISIBLE);
             retryBtn.setVisibility(View.VISIBLE);
+            txtNoConnexion.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setRefreshing(false);
         }
 

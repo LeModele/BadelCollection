@@ -75,7 +75,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:background="@color/gris_Color"
+        android:padding="3dp"
+        android:background="@drawable/manage_address_background"
         android:elevation="3dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -90,7 +91,7 @@
             android:paddingTop="6dp"
             android:paddingRight="16dp"
             android:paddingBottom="6dp"
-            android:background="@color/gris_Color"
+            android:textStyle="bold"
             android:text="Edit"
             android:textAlignment="center"
             android:textSize="12sp" />
@@ -103,7 +104,7 @@
             android:paddingTop="6dp"
             android:paddingEnd="16dp"
             android:paddingBottom="6dp"
-            android:background="@color/gris_Color"
+            android:textStyle="bold"
             android:text="Remove"
             android:textAlignment="center"
             android:textSize="12sp" />

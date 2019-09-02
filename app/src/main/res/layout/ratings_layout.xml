@@ -93,6 +93,7 @@
             android:layout_weight="1"
             android:max="100"
             android:progress="50"
+            android:background="@color/greenSuccessful"
             android:progressTint="@color/greenSuccessful" />
 
         <ProgressBar
@@ -426,6 +427,8 @@
             android:layout_weight="1"
             android:tint="#BEBEBE"
             app:srcCompat="@mipmap/star" />
+
     </LinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>

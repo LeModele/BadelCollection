@@ -32,7 +32,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout5">
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout5">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -100,15 +100,15 @@
                     android:inputType="number"
                     android:textColor="@color/colorRouge" />
 
-                <EditText
-                    android:id="@+id/state"
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/stateSpinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_weight="1"
-                    android:hint="State*"
-                    android:inputType="textPersonName"
+                    android:background="@drawable/border_background"
+                    android:backgroundTint="@color/gris_Color"
                     android:textColor="@color/colorRouge" />
             </LinearLayout>
 

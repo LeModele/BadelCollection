@@ -15,6 +15,12 @@
     <color name="fond_autre">#CCFFF2CC</color>
     <color name="blackColor">#CC000000</color>
 
+// color for Rating
+    <color name="unselected">#bebebe</color>
+    <color name="selected">#ffbb00</color>
+
+
+
 
     <color name="fontBlanc">#FCFFFFFF</color>
 </resources>

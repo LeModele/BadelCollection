@@ -2,6 +2,8 @@ package com.modele.badelcollection;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -96,10 +98,17 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewhold
         }
 
         private void setRating(int startPosition) {
+
             for(int x =0; x<rateNowContainer.getChildCount(); x++){
                 ImageView starBtn=(ImageView)rateNowContainer.getChildAt(x);
+                //starBtn.setImageResource(R.color.unselected);
+                int unselectedColor = Color.parseColor("#bebebe"); //The color u want
+                starBtn.setColorFilter(unselectedColor);
                 // starBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#bebebe")));
                 if(x<=startPosition){
+                    int selectedColor = Color.parseColor("#ffbb00"); //The color u want
+                    starBtn.setColorFilter(selectedColor);
+                    //starBtn.setImageResource(R.color.selected);
                     // starBtn.setImageTintList(ColorStateList.valueOf(Color.parseColor("#ffbb00")));
 
                 }
