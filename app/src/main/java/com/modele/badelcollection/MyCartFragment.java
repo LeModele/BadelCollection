@@ -81,7 +81,7 @@ public class MyCartFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 DeliveryActivity.cartItemModelList = new ArrayList<>();
-                for (int x = 0; x<DBqueries.cartItemModelList.size();x++){
+                for (int x = 0; x < DBqueries.cartItemModelList.size();x++){
                     CartItemModel cartItemModel = DBqueries.cartItemModelList.get(x);
                     if(cartItemModel.isInStock()){
                         DeliveryActivity.cartItemModelList.add(cartItemModel);

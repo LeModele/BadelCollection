@@ -1,11 +1,8 @@
 package com.modele.badelcollection;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +15,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DeliveryActivity extends AppCompatActivity {
@@ -35,7 +31,11 @@ public class DeliveryActivity extends AppCompatActivity {
     private Dialog loadingDialog;
     private Dialog paymentMethodDialog;
 
-    private ImageButton paytm;
+    private ImageButton paypal;
+    private ConstraintLayout orderConfimartionLayout;
+    private ImageButton continueShoppingBtn;
+    private TextView orderId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +57,10 @@ public class DeliveryActivity extends AppCompatActivity {
         pincode = findViewById(R.id.pincode);
         continueBtn = findViewById(R.id.cart_continue_btn);
 
+        //orderConfimartionLayout = findViewById(R.id.o);
+        //continueShoppingBtn = findViewById(R.id.conti);
+
+
         ///// loading Dialog
         loadingDialog = new Dialog(DeliveryActivity.this);
         loadingDialog.setContentView(R.layout.loading_progress_dialog);
@@ -73,6 +77,7 @@ public class DeliveryActivity extends AppCompatActivity {
         paymentMethodDialog.getWindow().setBackgroundDrawableResource(R.drawable.slider_background);
         //loadingDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.slider_background)); // valab aparti de api 21
         paymentMethodDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        paypal = paymentMethodDialog.findViewById(R.id.paypal);
         ///// loading Dialog
 
 
@@ -100,19 +105,15 @@ public class DeliveryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 paymentMethodDialog.show();
-                paytm = paymentMethodDialog.findViewById(R.id.paytm);
 
             }
         });
-        paytm.setOnClickListener(new View.OnClickListener() {
+        paypal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                paymentMethodDialog.dismiss();
-                loadingDialog.show();
+               paymentMethodDialog.dismiss();
+               //loadingDialog.show();
 
-                if (ContextCompat.checkSelfPermission(DeliveryActivity.this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(DeliveryActivity.this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS}, 101);
-                }
             }
         });
 
