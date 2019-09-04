@@ -37,10 +37,16 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
 
+<<<<<<< Updated upstream
     <string-array name="india_states">
         <item>Fort liberte</item>
         <item>port au prince</item>
         <item>Cap Haitien</item>
     </string-array>
+=======
+
+    <string name="thanks_order">Merci !!!</string>
+    <string name="confirm_order">Votre commande a ete confirme</string>
+>>>>>>> Stashed changes
 
 </resources>
